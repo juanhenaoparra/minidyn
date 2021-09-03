@@ -65,7 +65,7 @@ This library has an interpreter implementation for the DynamoDB Expressions.
 
 #### Expressions
 
-|                                              |                                                                                     | Supported? |
+|                                              |Syntax                                                                               | Supported? |
 |----------------------------------------------|-------------------------------------------------------------------------------------|------------|
 | operand comparator operand                   | =, <>, <, <=. > and >=                                                              | y          |
 | operand BETWEEN operand AND operand          | N,S,B                                                                               | y          |
@@ -77,7 +77,15 @@ This library has an interpreter implementation for the DynamoDB Expressions.
 
 ### Update Expressions
 
-These kinds of expressions are not supported yet.
+#### Expressions
+
+|          | Syntax                       | Supported? |
+|----------|------------------------------|------------|
+| SET      | SET action [, action] ...    | y          |
+| REMOVE   | REMOVE action [, action] ... | n          |
+| ADD      | ADD action [, action] ...    | n          |
+| DELETE   | DELETE action [, action] ... | n          |
+| function | list_append, if_not_exists   | n          |
 
 ## Missing Validations
 
