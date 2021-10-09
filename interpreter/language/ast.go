@@ -49,11 +49,11 @@ func (es *ConditionalExpression) statementNode() {
 }
 
 // TokenLiteral returns the literal token of the node
-func (ce *ConditionalExpression) TokenLiteral() string { return ce.Token.Literal }
+func (es *ConditionalExpression) TokenLiteral() string { return es.Token.Literal }
 
-func (ce *ConditionalExpression) String() string {
-	if ce.Expression != nil {
-		return ce.Expression.String()
+func (es *ConditionalExpression) String() string {
+	if es.Expression != nil {
+		return es.Expression.String()
 	}
 
 	return ""

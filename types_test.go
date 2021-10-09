@@ -50,7 +50,7 @@ func TestGetGoValue(t *testing.T) {
 			{N: aws.String("1")}, {S: aws.String("a")},
 		},
 		M: map[string]*dynamodb.AttributeValue{
-			"f": &dynamodb.AttributeValue{
+			"f": {
 				S: aws.String("a"),
 			},
 		},

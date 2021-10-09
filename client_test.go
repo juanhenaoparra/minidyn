@@ -439,7 +439,7 @@ func TestUpdateTable(t *testing.T) {
 			},
 		},
 		GlobalSecondaryIndexUpdates: []*dynamodb.GlobalSecondaryIndexUpdate{
-			&dynamodb.GlobalSecondaryIndexUpdate{
+			{
 				Create: &dynamodb.CreateGlobalSecondaryIndexAction{
 					IndexName: aws.String("newIndex"),
 					KeySchema: []*dynamodb.KeySchemaElement{
@@ -467,7 +467,7 @@ func TestUpdateTable(t *testing.T) {
 
 	input = &dynamodb.UpdateTableInput{
 		GlobalSecondaryIndexUpdates: []*dynamodb.GlobalSecondaryIndexUpdate{
-			&dynamodb.GlobalSecondaryIndexUpdate{
+			{
 				Update: &dynamodb.UpdateGlobalSecondaryIndexAction{
 					IndexName: aws.String("newIndex"),
 					ProvisionedThroughput: &dynamodb.ProvisionedThroughput{
@@ -484,7 +484,7 @@ func TestUpdateTable(t *testing.T) {
 
 	input = &dynamodb.UpdateTableInput{
 		GlobalSecondaryIndexUpdates: []*dynamodb.GlobalSecondaryIndexUpdate{
-			&dynamodb.GlobalSecondaryIndexUpdate{
+			{
 				Delete: &dynamodb.DeleteGlobalSecondaryIndexAction{
 					IndexName: aws.String("newIndex"),
 				},
@@ -1226,7 +1226,7 @@ func TestBatchWriteItemWithContext(t *testing.T) {
 	c.NoError(err)
 
 	requests := []*dynamodb.WriteRequest{
-		&dynamodb.WriteRequest{
+		{
 			PutRequest: &dynamodb.PutRequest{
 				Item: item,
 			},
