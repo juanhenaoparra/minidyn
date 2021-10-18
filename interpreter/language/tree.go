@@ -54,8 +54,10 @@ func (tn *TreeNode) Walk(s *strings.Builder) string {
 	}
 
 	s.WriteString(tn.ID)
-	s.WriteString(":")
+	s.WriteString(" --- ")
 	s.WriteString(tn.Expression.String())
+	s.WriteString(" --- ")
+	s.WriteString(string(tn.TokenType))
 	s.WriteString(",\n")
 
 	for _, c := range tn.Children {
@@ -105,6 +107,8 @@ func (tn *TreeNode) Fill() error {
 				return err
 			}
 
+			newChild.TokenType = childExpression.Token.Type
+
 			tn.Children = append(tn.Children, newChild)
 			continue
 		}
@@ -115,6 +119,9 @@ func (tn *TreeNode) Fill() error {
 		if err != nil {
 			return err
 		}
+
+		//FIXME: I've problems dealing with set the expression token type
+		// newChild.TokenType = childExpression.Token.Type
 
 		// TODO: use goroutines
 		err = newChild.Fill()
