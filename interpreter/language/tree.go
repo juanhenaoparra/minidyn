@@ -3,6 +3,7 @@ package language
 import (
 	"errors"
 	"fmt"
+	"math"
 	"math/rand"
 	"strings"
 )
@@ -54,6 +55,9 @@ func (tn *TreeNode) Walk(s *strings.Builder) string {
 		s = &strings.Builder{}
 	}
 
+	s.WriteString("CHILDOF: ")
+	s.WriteString(tn.ParentID)
+	s.WriteString(" ID: ")
 	s.WriteString(tn.ID)
 	s.WriteString(" --- ")
 	s.WriteString(tn.Expression.String())
@@ -79,21 +83,14 @@ func (tn *TreeNode) Fill() error {
 		return ErrMissingTokenLiteral
 	}
 
-	parsedString := deleteExternalParenthesis(tn.Expression.String())
-	childStrings := strings.Split(parsedString, tl)
-
-	// TODO: Clear children list
-	// fmt.Println("CHILDS: ", len(childStrings), " ::: ", childStrings)
+	childStrings := strings.Split(tn.Expression.String(), tl) // FIXME: first group by () and the split
+	childStrings = clearChildrenList(childStrings)
 
 	if len(tn.Children) == 0 {
 		tn.Children = make([]*TreeNode, 0, len(childStrings))
 	}
 
 	for _, cs := range childStrings {
-		if cs == "" {
-			continue
-		}
-
 		le := NewLexer(cs)
 		par := NewParser(le)
 
@@ -132,9 +129,39 @@ func (tn *TreeNode) Fill() error {
 	return nil
 }
 
-func deleteExternalParenthesis(input string) string {
-	output := strings.TrimPrefix(input, "(")
-	output = strings.TrimSuffix(output, ")")
+func clearChildrenList(childrenRaw []string) []string {
+	cleanedChildren := make([]string, 0, len(childrenRaw))
+
+	for _, child := range childrenRaw {
+		cleanedChild := deleteUnclosedParenthesis(child)
+		cleanedChild = strings.ReplaceAll(cleanedChild, " ", "")
+
+		if cleanedChild == "" {
+			continue
+		}
+
+		cleanedChildren = append(cleanedChildren, cleanedChild)
+	}
+
+	return cleanedChildren
+}
+
+func deleteUnclosedParenthesis(input string) string {
+	openParenthesisCount := strings.Count(input, "(")
+	closeParenthesisCount := strings.Count(input, ")")
+
+	if openParenthesisCount == closeParenthesisCount {
+		return input
+	}
+
+	toTrim := "("
+	count := int(math.Abs(float64(openParenthesisCount) - float64(closeParenthesisCount)))
+
+	if openParenthesisCount < closeParenthesisCount {
+		toTrim = ")"
+	}
+
+	output := strings.Replace(input, toTrim, "", count)
 
 	return output
 }

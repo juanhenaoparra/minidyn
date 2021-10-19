@@ -6,7 +6,7 @@ import (
 )
 
 func TestNewTree(t *testing.T) {
-	input := "NOT :b = :false_value AND :false_value"
+	input := "NOT :b = :false_value AND :a = :false_value AND attribute_exists(:c)"
 
 	le := NewLexer(input)
 	pe := NewParser(le)
