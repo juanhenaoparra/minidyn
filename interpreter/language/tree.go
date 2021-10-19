@@ -37,6 +37,7 @@ func NewTree(expression Expression) (*Tree, error) {
 	tree.Root = &TreeNode{
 		ID:         "ROOT",
 		Expression: expression,
+		TokenType:  TokenType(expression.TokenLiteral()),
 	}
 
 	err := tree.Root.Fill()
@@ -102,26 +103,22 @@ func (tn *TreeNode) Fill() error {
 				Value: par.curToken.Literal,
 			}
 
-			newChild, err := NewTreeNode(tn.ID, childExpression)
+			newChild, err := NewTreeNode(tn.ID, childExpression, childExpression.Token.Type)
 			if err != nil {
 				return err
 			}
-
-			newChild.TokenType = childExpression.Token.Type
 
 			tn.Children = append(tn.Children, newChild)
 			continue
 		}
 
 		childExpression := par.ParseConditionalExpression()
+		childExpressionTokenType := TokenType(childExpression.Expression.TokenLiteral())
 
-		newChild, err := NewTreeNode(tn.ID, childExpression.Expression)
+		newChild, err := NewTreeNode(tn.ID, childExpression.Expression, childExpressionTokenType)
 		if err != nil {
 			return err
 		}
-
-		//FIXME: I've problems dealing with set the expression token type
-		// newChild.TokenType = childExpression.Token.Type
 
 		// TODO: use goroutines
 		err = newChild.Fill()
@@ -184,7 +181,7 @@ func randString() string {
 }
 
 // NewTreeNode creates a new tree node with an expression
-func NewTreeNode(parentID string, expr Expression) (*TreeNode, error) {
+func NewTreeNode(parentID string, expr Expression, tokenType TokenType) (*TreeNode, error) {
 	if parentID == "" {
 		return nil, ErrMissingParentID
 	}
@@ -197,6 +194,7 @@ func NewTreeNode(parentID string, expr Expression) (*TreeNode, error) {
 		ID:         randString(),
 		ParentID:   parentID,
 		Expression: expr,
+		TokenType:  tokenType,
 	}, nil
 }
 
